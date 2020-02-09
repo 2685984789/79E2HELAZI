@@ -47,19 +47,25 @@
 
 
     <!--            Pagination        -->
+    
+<!--Supprimer pagination si recherche-->
     {if $recherche == 1}
         <nav>
             <ul class="pagination justify-content-center">
                 <li class="page-item">
                     <a class="page-link" href="?p={$page_prec}" tabindex="-1" >Précedent</a>
                 </li>
-
+                
+                <!--            Grisé page courante        -->
                 {for $index=1 to $nb_total_page}
                     <li class="page-item {if $page_courante == $index}active{/if}"><a class="page-link" href="?p={$index}">{$index}</a></li>
-                    {/for}
-
-                <a class="page-link" href="?p={$page_suiv}">Suivant </a>
-                </li>
+                {/for}
+                
+                <!--            Bloquer suivant        -->
+                {if $page_courante < $nb_total_page}
+                    <a class="page-link" href="?p={$page_suiv}">Suivant </a>
+                {/if}
+   
             </ul>
         </nav>
     {/if}
