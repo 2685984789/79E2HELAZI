@@ -28,6 +28,7 @@ if (!empty($_GET['recherche'])) {
     $sth->execute();
 
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+
 }
 
 //Sans recherche
@@ -45,7 +46,6 @@ else {
 
 
     $nb_total_page = ceil($nb_total_art / _nb_article_par_page_);
-
 
 //Requete Affichage article index
     $sth = $bdd->prepare("SELECT id, "

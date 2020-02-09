@@ -6,40 +6,23 @@ require_once 'config/connexion.conf.php';
 require_once('libs/Smarty.class.php');
 
 
-//Afficher article 
+//Afficher Article +  commentaires
+
 $voirid = $_GET['id'];
-$sth = $bdd->prepare("SELECT id, "
-        . "titre, "
-        . "texte, "
-        . "DATE_FORMAT(date, 'Fait le : %d/%m/%Y') AS date_fr, "
-        . "publier "
+$sth2 = $bdd->prepare("SELECT * "
         . "FROM Article "
-        . "WHERE id = :id ");
-$sth->bindValue(":id", $voirid, PDO::PARAM_BOOL);
-$sth->execute();
-
-$tableau = $sth->fetch(PDO::FETCH_ASSOC);
-
-
-
-//Afficher commentaire
-$sth2 = $bdd->prepare("SELECT texte, "
-        . "pseudo, "
-        . "email, "
-        . "temp, "
-        . "DATE_FORMAT(date, ' Le %d/%m/%Y') as date "
-        . "FROM commentaire "
-        . "WHERE id_art = :id ");
-$sth2->bindValue(":id", $voirid, PDO::PARAM_BOOL);
+        . "LEFT JOIN commentaire ON Article.id = commentaire.id_art "
+        . "WHERE id = :id");
+$sth2->bindValue(":id", $voirid, PDO::PARAM_INT);
 $sth2->execute();
-
 $commen = $sth2->fetchAll(PDO::FETCH_ASSOC);
+
 
 
 //Supprimer article
 
 if (!empty($_POST['submit']) and $_POST['submit'] == "supprimer") {
-    if (!empty($_COOKIE["sid"])) {//Pas le droit de supp si non connecter
+    if (!empty($_COOKIE["sid"])) {                                  //Pas le droit de supp si non connecté
         $voirid = $_POST['id_article'];
         $sth = $bdd->prepare("DELETE  "
                 . "FROM Article "
@@ -53,9 +36,9 @@ if (!empty($_POST['submit']) and $_POST['submit'] == "supprimer") {
 
         notif($message, $result);
 
-        header("Location: index.php"); //redirection vers article
+        header("Location: index.php"); //redirection vers index
         exit();
-    } else {//notif si non connecter
+    } else {//notif si non connecté
         
         $id_article = $_POST['id_article'];
   
@@ -64,7 +47,7 @@ if (!empty($_POST['submit']) and $_POST['submit'] == "supprimer") {
 
         notif($message, $result);
 
-        header("Location: affart.php?id=$id_article&action=consultation"); 
+        header("Location: affart.php?id=$id_article&action=consultation"); //redirection vers article
         exit();
     }
 }
@@ -81,10 +64,10 @@ if (!empty($_POST['submit']) and $_POST['submit'] == "commentaire") {
     $temp = date("H:i");
 
     $sth = $bdd->prepare("INSERT INTO commentaire "
-            . "(texte , pseudo, id_art, email, date ,temp) "
-            . "VALUES (:texte, :pseudo, :id_art , :email, :date ,:temp)");
+            . "(texte_comm , pseudo, id_art, email, date ,temp) "
+            . "VALUES (:texte_comm, :pseudo, :id_art , :email, :date ,:temp)");
 
-    $sth->bindValue(':texte', $texte, PDO::PARAM_STR);
+    $sth->bindValue(':texte_comm', $texte, PDO::PARAM_STR);
     $sth->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
     $sth->bindValue(':id_art', $id_article, PDO::PARAM_STR);
     $sth->bindValue(':email', $email, PDO::PARAM_STR);
@@ -112,7 +95,6 @@ $smarty->setTemplateDir('template/');
 $smarty->setCompileDir('templates_c/');
 
 
-$smarty->assign('tableau', $tableau);
 $smarty->assign('commen', $commen);
 
 

@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 3.1.34-dev-7, created on 2020-01-20 21:21:23
+/* Smarty version 3.1.34-dev-7, created on 2020-02-09 01:33:57
   from '/var/www/html/phpiut/template/index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.34-dev-7',
-  'unifunc' => 'content_5e260bc37ae082_33854292',
+  'unifunc' => 'content_5e3f5375663877_50658324',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '2eefd5b2cf580409d9b4d07062232900f25f6d20' => 
     array (
       0 => '/var/www/html/phpiut/template/index.tpl',
-      1 => 1579551681,
+      1 => 1581208396,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_5e260bc37ae082_33854292 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5e3f5375663877_50658324 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!-- Page Content -->
 <div class="container">
     <div class="row">
@@ -89,6 +89,8 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 
 
     <!--            Pagination        -->
+    
+<!--Supprimer pagination si recherche-->
     <?php if ($_smarty_tpl->tpl_vars['recherche']->value == 1) {?>
         <nav>
             <ul class="pagination justify-content-center">
@@ -96,7 +98,8 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
                     <a class="page-link" href="?p=<?php echo $_smarty_tpl->tpl_vars['page_prec']->value;?>
 " tabindex="-1" >Précedent</a>
                 </li>
-
+                
+                <!--            Grisé page courante        -->
                 <?php
 $_smarty_tpl->tpl_vars['index'] = new Smarty_Variable(null, $_smarty_tpl->isRenderingCache);$_smarty_tpl->tpl_vars['index']->step = 1;$_smarty_tpl->tpl_vars['index']->total = (int) ceil(($_smarty_tpl->tpl_vars['index']->step > 0 ? $_smarty_tpl->tpl_vars['nb_total_page']->value+1 - (1) : 1-($_smarty_tpl->tpl_vars['nb_total_page']->value)+1)/abs($_smarty_tpl->tpl_vars['index']->step));
 if ($_smarty_tpl->tpl_vars['index']->total > 0) {
@@ -105,13 +108,16 @@ $_smarty_tpl->tpl_vars['index']->first = $_smarty_tpl->tpl_vars['index']->iterat
                     <li class="page-item <?php if ($_smarty_tpl->tpl_vars['page_courante']->value == $_smarty_tpl->tpl_vars['index']->value) {?>active<?php }?>"><a class="page-link" href="?p=<?php echo $_smarty_tpl->tpl_vars['index']->value;?>
 "><?php echo $_smarty_tpl->tpl_vars['index']->value;?>
 </a></li>
-                    <?php }
+                <?php }
 }
 ?>
-
-                <a class="page-link" href="?p=<?php echo $_smarty_tpl->tpl_vars['page_suiv']->value;?>
+                
+                <!--            Bloquer suivant        -->
+                <?php if ($_smarty_tpl->tpl_vars['page_courante']->value < $_smarty_tpl->tpl_vars['nb_total_page']->value) {?>
+                    <a class="page-link" href="?p=<?php echo $_smarty_tpl->tpl_vars['page_suiv']->value;?>
 ">Suivant </a>
-                </li>
+                <?php }?>
+   
             </ul>
         </nav>
     <?php }?>
